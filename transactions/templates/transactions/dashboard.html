@@ -1,0 +1,222 @@
+{% extends "transactions/header.html" %}
+{% load static %}
+{% block content %}
+
+
+
+    <!-- -------------Greet-------------- -->
+
+    <div class="greet">
+        <div class="greet_text">Hello {{user.username}}!</div>
+        <div class="inc-exp-btn">
+            <button class="income-btn">
+                Income
+            </button>
+
+            <button class="expense-btn">
+                Expense
+            </button>
+
+            <form method="GET">
+                <div class="date-select">
+                    <label>Month:</label>
+                    <input type="month" name="month" value="{{selected_month}}" onchange="this.form.submit()">
+                    {% comment %} <button type="submit" class="filter_btn">Filter</button> {% endcomment %}
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- ------------overview---------- -- -->
+
+    <div class="select">
+
+        <div class="over-text">
+            Overview
+        </div>  
+    </div>
+
+    <!-----------------dETAIL-SECTION------------------>
+
+    <div class="detail">
+        <div class="boxes">
+            <img src="{% static 'img/income.svg' %}">
+            <div class="info">
+                <div class="box-txt">Income</div>
+                <div class="amt-inc">{{income_total}}</div>
+            </div>
+        </div>
+        <div class="boxes">
+            <img src="{% static 'img/expense.svg' %}">
+            <div class="info">
+                <div class="box-txt">Expense</div>
+                <div class="amt-exp">{{expense_total}}</div>
+            </div>
+        </div>
+        <div class="boxes">
+            <img src="{% static 'img/balance.svg' %}">
+            <div class="info">
+                <div class="box-txt">Balance</div>
+                <div class="amt-bal">{{balance}}</div>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- ----------------CATEGORY-SECTION------------------->
+    <div class="category-container">
+        <div class="income-category">
+            Income By Category
+            <div class="income-detail">
+
+            {% if income_categories %}
+                {% for cat, amt in income_categories.items %}
+                    <div class="entry-box income-data">
+                        <div class="entry-header">
+                            <span>{{ cat }}</span>
+                            <span>+₹{{ amt }}</span>
+                        </div>
+                        <div class="progress-bar">
+                            <div class="progress"></div>
+                        </div>
+                    </div>
+                {% endfor %}
+            {% else %}
+                No Data
+            {% endif %}
+
+        </div>
+
+        </div>
+        <div class="expense-category">
+            Expense By Category
+            <div class="expense-detail">
+                {% if expense_categories %}
+                    {% for cat, amt in expense_categories.items %}
+                        <div class="entry-box expense-data">
+                            <div class="entry-header">
+                                <span>{{ cat }}</span>
+                                <span>-₹{{ amt }}</span>
+                            </div>
+                        <div class="progress-bar">
+                            <div class="progress"></div>
+                        </div>
+                        </div>
+                    {% endfor %}
+                {% else %}
+                    No Data
+                {% endif %}
+            </div>
+
+        </div>
+
+        
+    </div>
+    <div class="budget-container" style="border:1px solid black">
+
+            <h2>Budget Status</h2>
+
+            {% for item in budget_data %}
+
+            <div class="budget-card">
+
+                <div class="budget-header">
+                    <span>{{ item.category }}</span>
+
+                    <span>
+                        ₹{{ item.spent }}
+                        /
+                        ₹{{ item.budget }}
+                    </span>
+                </div>
+
+                <div class="budget-bar">
+
+                    <div
+                        class="budget-progress"
+                        style="width:{{ item.percentage }}%">
+                    </div>
+
+                </div>
+
+                <small>
+                    {{ item.percentage|floatformat:0 }}% Used
+                </small>
+
+            </div>
+
+            {% endfor %}
+
+        </div>
+
+
+    <!-- Income Modal Form -->
+
+    <form method="POST">
+        {% csrf_token %}
+         <input type="hidden" name="form_type" value="transaction">
+        <input type="hidden" name="type" value="income">
+        <div id="incomeModal" class="modal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3>Add Income</h3>
+                    <span id="incomeClose" class="close">&times;</span>
+                </div>
+                <!-- inside income form -->
+
+                {% comment %} <input type="text" id="incomeCategory" name="category" placeholder="e.g. Salary" required> {% endcomment %}
+                <label>Category:</label>
+                    <select name="category" class="dropdown" required>
+                         {% for cat in income_categories_list %}
+                            <option value="{{ cat.name }}">
+                                {{ cat.name }}
+                            </option>
+                        {% endfor %}
+                    </select>
+                <label>Amount:</label>
+                <input type="number" id="incomeAmount" name="amount" placeholder="e.g. 5000" required>
+
+                <label for="start" required>Date:</label>
+                <input type="date" name="date">
+
+                <button type="submit" id="addIncomeBtn">Add</button>
+            </div>
+        </div>
+    </form>
+
+
+    <!-- Expense Modal Form -->
+    <form method="POST">
+        {% csrf_token %}
+        <input type="hidden" name="form_type" value="transaction">
+        <input type="hidden" name="type" value="expense">
+        <div id="expenseModal" class="modal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3>Add Expense</h3>
+                    <span id="expenseClose" class="close">&times;</span>
+                </div>
+
+                <!-- inside expense form -->
+
+                <label>Category:</label>
+                    <select name="category"   class="dropdown" required>
+                        {% for cat in expense_categories_list %}
+                            <option value="{{ cat.name }}">
+                                {{ cat.name }}
+                            </option>
+                        {% endfor %}
+                    </select>
+
+                <label>Amount:</label>
+                <input type="number" id="expenseAmount" name="amount" placeholder="e.g. 2000" required>
+
+                <label for="start" required>Date:</label>
+                <input type="date" name="date">
+
+                <button type="submit" id="addExpenseBtn">Add</button>
+            </div>
+        </div>
+    </form>
+
+{% endblock content %}  

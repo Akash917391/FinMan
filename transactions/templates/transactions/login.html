@@ -1,0 +1,52 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Finman</title>
+    <link rel="stylesheet" href="{% static 'style.css' %}">
+</head>
+
+<body>
+    <div class="logo">
+        <img src="{% static 'img/logo.png'%}" alt="logo" width="30px" height="30px">
+        <h2 class="head-name">FINMAN</h2>
+    </div>
+    <div class="login-container">
+        <div class="login-content">
+            <div class="login">
+                <h2 class="log">LOGIN</h2>
+            </div>
+            <div class="form-detail">
+                <form method="POST" class="form-login">
+                    {% csrf_token %}
+                    <div class="email-id">
+                        <label for="email" class="email-txt">Username:</label>
+                        <input type="text" name="username" class="email-input" placeholder="Enter Email" id="email"
+                            required>
+                    </div>
+                    <div class="password">
+                        <label for="password" class="password-txt">Password:</label>
+                        <input type="password" name="password" class="password-input" placeholder="Enter Password"
+                            id="password" required>
+                    </div>
+                    <div class="submit-button">
+                        <button type="submit" class="submit-btn">Submit</button>
+                    </div>
+                    <div class="redirect-login">
+                        <a href="{%url 'register'%}" class="create-acc">
+                            Create An Account
+                        </a>
+                        {% comment %} <a href="#forgot" class="forgot-pass">
+                            Forgot Password
+                        </a> {% endcomment %}
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>

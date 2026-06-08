@@ -1,0 +1,29 @@
+{% extends "transactions/header.html" %}
+
+{% block content %}
+
+<h2>Edit Transaction</h2>
+
+<form method="POST">
+{% csrf_token %}
+
+<label>Category</label>
+<input type="text" name="category" value="{{ transaction.category }}">
+
+<label>Amount</label>
+<input type="number" name="amount" value="{{ transaction.amount }}">
+
+<label>Type</label>
+<select name="type">
+    <option value="income" {% if transaction.type == "income" %}selected{% endif %}>Income</option>
+    <option value="expense" {% if transaction.type == "expense" %}selected{% endif %}>Expense</option>
+</select>
+
+<label>Date</label>
+<input type="date" name="date" value="{{ transaction.transaction_date|date:'Y-m-d' }}">
+
+<button type="submit">Update</button>
+
+</form>
+
+{% endblock %}

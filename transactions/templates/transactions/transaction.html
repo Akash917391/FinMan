@@ -1,0 +1,118 @@
+{% extends "transactions/header.html" %}  
+{% load static %}
+
+    {% block content %}
+
+    <!-- ------------Transaction Filter Section---------- -->
+    <div class="select transaction">
+        <div class="over-text">Transaction History</div>
+            <form method="GET">
+                <div class="date-select">
+                    <label>Month:</label>
+                    <input type="month" name="month" value="{{selected_month}}" onchange="this.form.submit()">
+                    {% comment %} <button type="submit" class="filter_btn">Filter</button> {% endcomment %}
+                </div>
+            </form>
+        </div>  
+    </div>
+
+    <!-- Divider line -->
+    <div class="line"></div>
+
+    <!-- ----------Transaction Table----------- -->
+    <div class="transaction-detail">
+        <table>
+            <thead>
+                <tr>
+                    <th>Category</th>
+                    <th>Date | Time</th>
+                    <th>Type</th>
+                    <th>Amount</th>
+                    <th>operate</th>
+                </tr>
+            </thead>
+            <tbody>
+
+                {% for t in transactions %}
+                        <tr>
+                            <!-- Safely output category -->
+                            <td>{{t.category}}</td>
+
+                            <!-- Format and display the transaction date and Time -->
+                            <td>{{ t.created_at|date:"Y-m-d H:i" }}</td>
+
+                            
+
+                            <!-- Apply class based on transaction type for styling (e.g., income/expense) -->
+                            {% if t.type == 'income' %}
+                            <td style = 'color:green'>{{t.type}}</td>
+                            {% else %}
+                            <td style = 'color:red'>{{t.type}}</td>
+                            {% endif %}
+
+                            <!-- Format amount and prepend currency symbol -->
+                            <td class="amt">{{t.amount}}</td>
+
+                            <td>
+                                {% comment %} <a href="{% url 'edit_transaction' t.id %}"> {% endcomment %}
+                                    <button type="button" class="modify edit-btn"
+                                        data-id="{{ t.id }}"
+                                        data-category="{{ t.category }}"
+                                        data-amount="{{ t.amount }}"
+                                        data-type="{{ t.type }}">
+                                        Edit
+                                    </button>
+                                {% comment %} </a> {% endcomment %}
+
+                                <a href="{% url 'delete_transaction' t.id %}">
+                                    <button class="modify">Delete</button>
+                                </a>
+                            </td>
+                        </tr>
+                       
+                    {% empty%}    
+                    <!-- If no transactions, show message -->
+                    <tr><td colspan="4">No transactions found.</td></tr>
+                        
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    
+    
+
+    <form method="POST" id="editForm">
+    {% csrf_token %}
+
+    <input type="hidden" name="transaction_id" id="edit-id">
+
+    <div class="edit-model-bg" id="editModal">
+        <div class="edit-model">
+
+            <div class="modal-header">
+                <h3>Update</h3>
+                <span id="edit-close" class="close">&times;</span>
+            </div>
+
+            <div class="model-content">
+
+                <label>Category:</label>
+                <select name="category" id="edit-category" required>
+                </select>
+
+                <label>Amount:</label>
+                <input type="number" name="amount" id="edit-amount" required>
+
+                <label>Date:</label>
+                <input type="date" name="date" id="edit-date">
+
+                <button type="submit" class="butt">Update</button>
+
+            </div>
+        </div>
+    </div>
+</form>
+
+    
+    {% endblock content %}
+    

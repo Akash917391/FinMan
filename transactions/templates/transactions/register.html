@@ -1,0 +1,69 @@
+<!-- -------------HTML -------------- -->
+
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Sign Up-FinMan</title>
+  <link rel="stylesheet" href="{% static 'style.css' %}">
+</head>
+
+<body>
+  <div class="logo">
+    <img src="{%static 'img/logo.png'%}" alt="logo" width="30px" height="30px">
+    <h2 class="head-name">FINMAN</h2>
+  </div>
+  <div class="signup-container">
+    <div class="signup-content">
+      <div class="signup">
+        <h2 class="signup-txt">SIGN UP</h2>
+      </div>
+
+
+      <div class="register-detail">
+
+        <form method="POST" class="reg-form">
+          {% csrf_token %}
+
+          <div class="s_name">
+            <label for="name" class="txt">Name :</label>
+            <input type="text" id="name" name="username" placeholder="Enter Your Name">
+          </div>
+
+          <div class="s_login-email">
+            <label for="email" class="txt">Email Id :</label>
+            <input type="email" id="email" name="email" placeholder="Enter Email Address" required />
+          </div>
+
+          <div class="s_login-pswrd">
+            <label for="password" class="txt">Password :</label>
+            <input type="password" id="password" name="password1" placeholder="Enter Password" required required
+              minlength="5" />
+          </div>
+
+          <div class="s_cnfrm-pswrd">
+            <label for="cnfrm-password" class="txt">Confirm Password :</label>
+            <input type="password" id="cnfrm-password" name="password2" placeholder="Enter Password Again" required
+              required minlength="5" />
+          </div>
+
+          <div>
+            <div class="s_submit">
+              <button type="submit" class="signup_btn">Sign Up</button>
+            </div>
+          </div>
+
+          <div>
+            <p>Already Have An Account ?<a href="{%url 'login' %}">Login</a></p>
+          </div>
+
+        </form>
+      </div>
+    </div>
+  </div>
+</body>
+
+</html>
